@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WorkflowConfig>
+  <EmailNotificationOn>True</EmailNotificationOn>
+  <EmailConfig>
+    <SMTPServer>mail-relay.mydomain.com</SMTPServer>
+    <SMTPPort>25</SMTPPort>
+    <SMTPUser>userid</SMTPUser>
+    <SMTPPassword>password</SMTPPassword>
+    <SMTPSSLEnabled>False</SMTPSSLEnabled>
+    <SMTPIsBodyHTML>True</SMTPIsBodyHTML>
+    <EmailFrom>wfnotifier@mydomain.com</EmailFrom>
+  </EmailConfig>
+  <CMSInfo> 
+    <PreviewURL>http://preview_site.com</PreviewURL>
+    <CMSURL>http://tridion.cms.com</CMSURL>
+  </CMSInfo>
+  <!-- Workflow Task Definitions for actions like publish or email and email subject/body-->
+  <WorkflowTaskDefinitions>
+    <EmailTasks>
+      <Task messageID="Task1" toAuthor="false" toGroup="true">PUBLISH TO STAGING</Task>
+      <Task  messageID="Task2" toAuthor="true" toGroup="true">PUBLISH TO LIVE</Task>
+      <Task  messageID="Task3" toAuthor="true" toGroup="false">REJECTED</Task>
+    </EmailTasks>
+    <PublishTasks>
+      <Target targetID="tcm:0-1-65538">PUBLISH TO STAGING</Target>
+      <Target targetID="tcm:0-1-65538">PUBLISH TO LIVE</Target>
+    </PublishTasks>
+  </WorkflowTaskDefinitions>
+
+  <!-- Workflow Email Message Subject and Body text -->
+  <EMailMessages>
+    <Task messageID ="Task1">
+      <Subject>CMS Workflow Notification - Task : Request For Approval  Item : {0}</Subject>
+      <Body>
+        <![CDATA[<html>{11}<head></head><body>
+<br /><h4>Worflow Notification for "{0}"</h4>
+<table border='0' cellpadding='5' cellspacing='5'>
+<tr><td class='tcontent'>Content Name</td><td>{0}</td></tr>
+<tr><td class='tcontent'>Content Type</td><td>{1}</td></tr>
+<tr><td class='tcontent'>CMS Location</td><td>{2}</td></tr>
+<tr><td class='tcontent'>Approval Requested By</td><td>{3} ({4})</td></tr>
+<tr><td class='tcontent'>Content Editor Comments</td><td>{5}</td></tr>
+<tr><td class='tcontent'>Publication Name</td><td>{6}</td></tr>
+</table>
+<br /><h5>View the Component using the below urls:</h5>
+<table border='1' cellpadding='0' cellspacing='10'>
+<tr><td class='tbutton'><a href='{7}/WebUI/item.aspx?tcm={8}#id={9}' class='button'>VIEW/EDIT Content</a></td>
+<td class='tbutton'><a class='button' href='{10}'>Preview Website</a></td></tr>
+</table></body></html>]]>
+      </Body>
+    </Task>
+    <Task messageID ="Task2">
+      <Subject>CMS Workflow Notification - Item : {0} is approved and published</Subject>
+      <Body>
+        <![CDATA[<html>{11}<head></head><body>
+<br /><h4>Worflow Notification for "{0}"</h4>
+<table border='0' cellpadding='5' cellspacing='5'>
+<tr><td class='tcontent'>Content Name</td><td>{0}</td></tr>
+<tr><td class='tcontent'>Content Type</td><td>{1}</td></tr>
+<tr><td class='tcontent'>CMS Location</td><td>{2}</td></tr>
+<tr><td class='tcontent'>Approved By</td><td>{3} ({4})</td></tr>
+<tr><td class='tcontent'>Approver Comments</td><td>{5}</td></tr>
+<tr><td class='tcontent'>Publication Name</td><td>{6}</td></tr>
+</table>
+<br /><h5>View the Component using the below urls:</h5>
+<table border='1' cellpadding='0' cellspacing='10'>
+<tr><td class='tbutton'><a href='{7}/WebUI/item.aspx?tcm={8}#id={9}' class='button'>VIEW/EDIT Content</a></td>
+<td class='tbutton'><a class='button' href='{10}'>Preview Website</a></td></tr>
+</table></body></html>]]>
+      </Body>
+    </Task>
+    <Task messageID ="Task3">
+      <Subject>CMS Workflow Notification - Item : {0} is rejected</Subject>
+      <Body>
+        <![CDATA[<html>{11}<head></head><body>
+<br /><h4>Worflow Notification for "{0}"</h4>
+<table border='0' cellpadding='5' cellspacing='5'>
+<tr><td class='tcontent'>Content Name</td><td>{0}</td></tr>
+<tr><td class='tcontent'>Content Type</td><td>{1}</td></tr>
+<tr><td class='tcontent'>CMS Location</td><td>{2}</td></tr>
+<tr><td class='tcontent'>Rejected By</td><td>{3} ({4})</td></tr>
+<tr><td class='tcontent'>Reason For Rejection</td><td>{5}</td></tr>
+<tr><td class='tcontent'>Publication Name</td><td>{6}</td></tr>
+</table>
+<br /><h5>View the Component using the below urls:</h5>
+<table border='1' cellpadding='0' cellspacing='10'>
+<tr><td class='tbutton'><a href='{7}/WebUI/item.aspx?tcm={8}#id={9}' class='button'>VIEW/EDIT Content</a></td>
+<td class='tbutton'><a class='button' href='{10}'>Preview Website</a></td></tr>
+</table></body></html>]]>
+      </Body>
+    </Task>
+  </EMailMessages>
+
+  <!-- Content publish mappings, content should be published from website publication 
+    configure the webdav paths below, webdav paths will not change from env to env -->
+  <PublishMappings> 
+	 <Publication Content="030 Master Content">/webdav/080 Website IN EN</Publication>
+	 <Publication Content="040 IN EN Content">/webdav/080 Website IN EN</Publication>
+	 <Publication Content="050 IN HI Content">/webdav/090 Website IN HI</Publication>
+  </PublishMappings>
+
+  <!-- Email CSS Class-->
+  <StyleClass>
+    <![CDATA[
+    <style>BODY{BACKGROUND-COLOR:   #FCFCFE;      COLOR:#000033; FONT-FAMILY:Verdana, Helvetica;      FONT-SIZE:      9pt;}
+    table{   FONT-FAMILY:    Verdana, Helvetica;   FONT-SIZE:      9pt;}
+    table.info{   TABLE-LAYOUT:       fixed;   border: 0 solid BLACK;   border-collapse:collapse;}
+    td.tcontent{   background:     #EEEEEE;   border: 0 solid #AAAAAA;   vertical-align: top}
+    td.theader{   WIDTH: 185px;   background:     #D8D8D8;   border: 1 solid #888888;}
+    td.tbutton{   background:     #D8D8D8;   border: 0 solid #AAAAAA;   vertical-align: top}
+    .button{   text-align:center; BORDER-BOTTOM:      #888899 1px solid;   BORDER-LEFT:        #FFFFFF 1px solid;   BORDER-RIGHT:       #888899 1px solid;   BORDER-TOP:         #FFFFFF 1px solid;   FONT-FAMILY:        Verdana, elvetica;   FONT-SIZE:      9pt;   HEIGHT:        20px;   WIDTH:          160px;}
+    a{   COLOR:          #000033;   CURSOR:         hand;   TEXT-DECORATION:    none}</style>
+    ]]>
+  </StyleClass>
+</WorkflowConfig>
